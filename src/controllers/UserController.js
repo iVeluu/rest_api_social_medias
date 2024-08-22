@@ -6,6 +6,7 @@ import path from "path";
 import User from "../models/User.js"
 import { hashPassword, checkPassword } from "../utils/auth.js";
 import { generateJWT } from "../utils/jwt.js";
+import { followThisUser } from '../utils/follow.js';
 
 export class UserController {
   static createAccount = async (req, res) => {
@@ -70,7 +71,13 @@ export class UserController {
         return res.status(404).json({ error: "Usuario No Encontrado" });
       }
 
-      res.json(user);
+      const followInfo = await followThisUser(req.user.id, userId)
+
+      res.json({
+        user,
+        following: followInfo.following,
+        follower: followInfo.follower
+      });
     } catch (error) {
       res.status(500).json({ error: "Error del Servidor" });
     }

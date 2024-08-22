@@ -22,4 +22,20 @@ router.delete(
   FollowController.unfollow
 );
 
+router.get(
+  "/following/:userId?/:page?",
+  handleInputErrors,
+  authenticate,
+  FollowController.following
+);
+
+router.get(
+  "/followers/:userId?/:page?",
+  body("userId").isMongoId().withMessage("ID no Válido"),
+  handleInputErrors,
+  authenticate,
+  FollowController.followers
+);
+
+
 export default router
